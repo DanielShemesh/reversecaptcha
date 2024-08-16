@@ -35,7 +35,7 @@ Reverse Captcha is an innovative web application that adds a unique twist to the
 1. Clone the repository:
     ```bash
     git clone https://github.com/danielshemesh/reversecaptcha
-    cd reverse-captcha
+    cd reversecaptcha
     ```
 
 2. Navigate to the backend directory:
