@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverse Captcha Album Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-center">Reverse Captcha Album Tracker</h1>
+        
+        <div id="artistSearch" class="mb-8">
+            <input type="text" id="artistInput" placeholder="Enter artist name" class="w-full p-2 border rounded">
+            <button onclick="searchArtist()" class="mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Search Artist</button>
+        </div>
+
+        <div id="albumList" class="hidden mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Albums</h2>
+            <ul id="albumItems" class="space-y-2"></ul>
+        </div>
+
+        <div id="captchaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white p-6 rounded-lg max-w-md w-full">
+                <h3 class="text-xl font-semibold mb-4">Reverse Captcha</h3>
+                <p id="captchaDescription" class="mb-4"></p>
+                <input type="file" id="imageInput" accept="image/*" class="mb-4">
+                <div id="dragDropArea" class="border-2 border-dashed border-gray-300 p-4 text-center mb-4">
+                    <p>Drag and drop an image here</p>
+                </div>
+                <button onclick="submitCaptcha()" class="bg-green-500 text-white p-2 rounded hover:bg-green-600">Submit</button>
+                <button onclick="closeCaptcha()" class="ml-2 bg-red-500 text-white p-2 rounded hover:bg-red-600">Close</button>
+            </div>
+        </div>
+
+        <div id="trackList" class="hidden">
+            <h2 class="text-2xl font-semibold mb-4">Track List</h2>
+            <ul id="trackItems" class="space-y-2"></ul>
+        </div>
+    </div>
+
+    <script>
+        let currentAlbum = '';
+        let currentArtist = '';
+
+        async function searchArtist() {
+            const artistName = document.getElementById('artistInput').value;
+            if (!artistName) return;
+        
+            currentArtist = artistName;
+            const response = await fetch(`http://localhost:8080/albums?artistName=${encodeURIComponent(artistName)}`, {
+                credentials: 'include'
+            });
+            const data = await response.json();
+                
+            const albumList = document.getElementById('albumItems');
+            albumList.innerHTML = '';
+            data.albums.forEach(album => {
+                const li = document.createElement('li');
+                li.textContent = `${album.title} (${album.year})`;
+                li.className = 'cursor-pointer hover:text-blue-500';
+                li.onclick = () => showCaptcha(album.title, data.description);
+                albumList.appendChild(li);
+            });
+
+            document.getElementById('albumList').classList.remove('hidden');
+        }
+
+        function showCaptcha(albumName, description) {
+            currentAlbum = albumName;
+            document.getElementById('captchaDescription').textContent = description;
+            document.getElementById('captchaModal').classList.remove('hidden');
+        }
+
+        function closeCaptcha() {
+            document.getElementById('captchaModal').classList.add('hidden');
+        }
+
+        async function submitCaptcha() {
+            const imageInput = document.getElementById('imageInput');
+            if (!imageInput.files || imageInput.files.length === 0) {
+                alert('Please select an image file.');
+                return;
+            }
+
+            const file = imageInput.files[0];
+            const imageBase64 = await getBase64(file);
+        
+            const payload = {
+                albumName: currentAlbum,
+                imageBase64: imageBase64
+            };
+        
+            console.log('Submitting payload:', payload);
+        
+            try {
+                const response = await fetch('http://localhost:8080/album-songs-with-test', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                    credentials: 'include'
+                });
+        
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+        
+                const data = await response.json();
+                console.log('Response data:', data);
+        
+                displayTracks(data);
+                closeCaptcha();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while submitting the captcha. Please try again.');
+            }
+        }
+
+        function displayTracks(tracks) {
+            const trackList = document.getElementById('trackItems');
+            trackList.innerHTML = '';
+            tracks.forEach(track => {
+                const li = document.createElement('li');
+                li.textContent = track.title;
+                trackList.appendChild(li);
+            });
+            document.getElementById('trackList').classList.remove('hidden');
+        }
+
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Drag and drop functionality
+        const dragDropArea = document.getElementById('dragDropArea');
+        const imageInput = document.getElementById('imageInput');
+
+        dragDropArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dragDropArea.classList.add('bg-gray-200');
+        });
+
+        dragDropArea.addEventListener('dragleave', () => {
+            dragDropArea.classList.remove('bg-gray-200');
+        });
+
+        dragDropArea.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            dragDropArea.classList.remove('bg-gray-200');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                imageInput.files = dataTransfer.files;
+                dragDropArea.textContent = `File selected: ${file.name}`;
+            }
+        });
+
+        imageInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                dragDropArea.textContent = `File selected: ${e.target.files[0].name}`;
+            } else {
+                dragDropArea.textContent = 'Drag and drop an image here';
+            }
+        });
+    </script>
+</body>
+</html>
