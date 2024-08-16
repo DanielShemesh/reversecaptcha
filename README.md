@@ -55,7 +55,7 @@ Reverse Captcha is an innovative web application that adds a unique twist to the
 
 5. Run the Go server:
     ```bash
-    go run main.go
+    go run backend.go
     ```
 
    The web app will be available at `http://localhost:8080`.
