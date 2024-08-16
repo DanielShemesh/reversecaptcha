@@ -43,10 +43,13 @@ Reverse Captcha is an innovative web application that adds a unique twist to the
     cd backend
     ```
 
-3. Create a `.env` file in the backend directory and add your OpenAI API key:
+3. Create a `.env` file in the backend directory and add your OpenAI API key and base URL:
     ```env
     OPENAI_API_KEY=your_openai_api_key
+    OPENAI_BASE_URL=https://api.openai.com/v1
     ```
+
+   If you're using a custom OpenAI API endpoint, replace the `OPENAI_BASE_URL` with the appropriate URL.
 
 4. Install Go dependencies:
     ```bash
