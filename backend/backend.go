@@ -234,8 +234,7 @@ func getRandomDescription() string {
 
 // verifyTest checks if the user passed the test
 func verifyTest(testID string, imageBase64 string) (bool, error) {
-	// Implementation of the test verification logic goes here
-	// This is a placeholder implementation
+	// return true, nil
 	mu.Lock()
 	defer mu.Unlock()
 	test := tests[testID]
