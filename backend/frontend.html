@@ -1,65 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reverse Captcha Album Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                    },
+                },
+            },
+        }
+    </script>
 </head>
-<body class="bg-gray-100 min-h-screen font-sans">
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8 text-center">Reverse Captcha Album Tracker</h1>
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div class="container mx-auto px-4 py-8 max-w-3xl">
+        <h1 class="text-4xl font-bold mb-8 text-center text-primary dark:text-primary">Reverse Captcha Album Tracker</h1>
         
-        <div id="artistSearch" class="mb-8">
-            <input type="text" id="artistInput" placeholder="Enter artist name (e.g., Rick Astley)" class="w-full p-2 border rounded">
-            <button onclick="searchArtist()" class="mt-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600">Search Artist</button>
-        </div>
-
-        <div id="albumList" class="hidden mb-8">
-            <h2 class="text-2xl font-semibold mb-4">Albums</h2>
-            <ul id="albumItems" class="space-y-2"></ul>
-        </div>
-
-        <div id="captchaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div class="bg-white p-6 rounded-lg max-w-md w-full">
-                <h3 class="text-xl font-semibold mb-4">Reverse Captcha</h3>
-                <p id="captchaDescription" class="mb-4"></p>
-                <input type="file" id="imageInput" accept="image/*" class="mb-4">
-                <div id="dragDropArea" class="border-2 border-dashed border-gray-300 p-4 text-center mb-4">
-                    <p>Drag and drop an image here</p>
-                </div>
-                <button onclick="submitCaptcha()" class="bg-green-500 text-white p-2 rounded hover:bg-green-600">Submit</button>
-                <button onclick="closeCaptcha()" class="ml-2 bg-red-500 text-white p-2 rounded hover:bg-red-600">Close</button>
+        <div id="artistSearch" class="mb-8 max-w-md mx-auto">
+            <div class="flex">
+                <input type="text" id="artistInput" placeholder="Enter artist name (e.g., Rick Astley)" class="flex-grow p-3 border rounded-l-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
+                <button onclick="searchArtist()" class="bg-primary text-white p-3 rounded-r-lg hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </button>
             </div>
         </div>
 
-        <div id="trackList" class="hidden">
-            <h2 class="text-2xl font-semibold mb-4">Track List</h2>
+        <div id="albumList" class="hidden mb-8 animate-fade-in max-w-md mx-auto">
+            <h2 class="text-2xl font-semibold mb-4 text-secondary dark:text-secondary">Albums</h2>
+            <ul id="albumItems" class="space-y-2"></ul>
+        </div>
+
+        <div id="captchaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full shadow-xl">
+                <h3 class="text-xl font-semibold mb-4 text-primary dark:text-primary">Reverse Captcha</h3>
+                <p id="captchaDescription" class="mb-4 dark:text-gray-300"></p>
+                <input type="file" id="imageInput" accept="image/*" class="mb-4 hidden">
+                <div id="dragDropArea" class="border-2 border-dashed border-gray-300 dark:border-gray-600 p-4 text-center mb-4 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300">
+                    <p class="dark:text-gray-300">Drag and drop an image here or click to select</p>
+                </div>
+                <div class="flex justify-end space-x-2">
+                    <button onclick="submitCaptcha()" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary">Submit</button>
+                    <button onclick="closeCaptcha()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="trackList" class="hidden animate-fade-in max-w-md mx-auto">
+            <h2 class="text-2xl font-semibold mb-4 text-secondary dark:text-secondary">Track List</h2>
             <ul id="trackItems" class="space-y-2"></ul>
         </div>
     </div>
 
+    <button id="darkModeToggle" class="fixed bottom-4 right-4 bg-gray-200 dark:bg-gray-700 p-2 rounded-full shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+    </button>
+
     <script>
         let currentAlbum = '';
         let currentArtist = '';
+
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        darkModeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
 
         async function searchArtist() {
             const artistName = document.getElementById('artistInput').value;
             if (!artistName) return;
         
             currentArtist = artistName;
-            const response = await fetch(`/albums?artistName=${encodeURIComponent(artistName)}`, {
-                credentials: 'include'
-            });
-            const data = await response.json();
-                
+            try {
+                const response = await fetch(`/albums?artistName=${encodeURIComponent(artistName)}`, {
+                    credentials: 'include'
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                displayAlbums(data);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while searching for the artist. Please try again.');
+            }
+        }
+
+        function displayAlbums(data) {
             const albumList = document.getElementById('albumItems');
             albumList.innerHTML = '';
             data.albums.forEach(album => {
                 const li = document.createElement('li');
-                li.textContent = `${album.title} (${album.year})`;
-                li.className = 'cursor-pointer hover:text-blue-500';
-                li.onclick = () => showCaptcha(album.title, data.description);
+                li.innerHTML = `
+                    <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                        <span class="text-sm">${album.title} (${album.year})</span>
+                        <button class="text-primary hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 focus:outline-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                li.querySelector('button').onclick = () => showCaptcha(album.title, data.description);
                 albumList.appendChild(li);
             });
 
@@ -121,9 +173,14 @@
         function displayTracks(tracks) {
             const trackList = document.getElementById('trackItems');
             trackList.innerHTML = '';
-            tracks.forEach(track => {
+            tracks.forEach((track, index) => {
                 const li = document.createElement('li');
-                li.textContent = track.title;
+                li.innerHTML = `
+                    <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+                        <span class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-3 text-sm font-bold">${index + 1}</span>
+                        <span class="text-sm">${track.title}</span>
+                    </div>
+                `;
                 trackList.appendChild(li);
             });
             document.getElementById('trackList').classList.remove('hidden');
@@ -142,34 +199,44 @@
         const dragDropArea = document.getElementById('dragDropArea');
         const imageInput = document.getElementById('imageInput');
 
+        dragDropArea.addEventListener('click', () => {
+            imageInput.click();
+        });
+
         dragDropArea.addEventListener('dragover', (e) => {
             e.preventDefault();
-            dragDropArea.classList.add('bg-gray-200');
+            dragDropArea.classList.add('bg-gray-200', 'dark:bg-gray-700');
         });
 
         dragDropArea.addEventListener('dragleave', () => {
-            dragDropArea.classList.remove('bg-gray-200');
+            dragDropArea.classList.remove('bg-gray-200', 'dark:bg-gray-700');
         });
 
         dragDropArea.addEventListener('drop', async (e) => {
             e.preventDefault();
-            dragDropArea.classList.remove('bg-gray-200');
+            dragDropArea.classList.remove('bg-gray-200', 'dark:bg-gray-700');
             const file = e.dataTransfer.files[0];
             if (file && file.type.startsWith('image/')) {
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(file);
                 imageInput.files = dataTransfer.files;
-                dragDropArea.textContent = `File selected: ${file.name}`;
+                updateDragDropAreaText(file.name);
             }
         });
 
         imageInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
-                dragDropArea.textContent = `File selected: ${e.target.files[0].name}`;
+                updateDragDropAreaText(e.target.files[0].name);
             } else {
-                dragDropArea.textContent = 'Drag and drop an image here';
+                updateDragDropAreaText();
             }
         });
+
+        function updateDragDropAreaText(fileName = null) {
+            dragDropArea.innerHTML = fileName
+                ? `<p class="dark:text-gray-300">File selected: ${fileName}</p>`
+                : '<p class="dark:text-gray-300">Drag and drop an image here or click to select</p>';
+        }
     </script>
 </body>
 </html>
