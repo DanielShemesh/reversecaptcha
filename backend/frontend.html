@@ -12,30 +12,60 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#3B82F6',
+                        primary: '#4F46E5',
                         secondary: '#10B981',
+                        accent: '#F59E0B',
+                        background: '#F3F4F6',
+                        'background-dark': '#1F2937',
                     },
                     fontFamily: {
                         sans: ['Poppins', 'sans-serif'],
                     },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                    }
                 },
             },
         }
     </script>
     <style>
         .gradient-bg {
-            background: linear-gradient(135deg, #3B82F6 0%, #10B981 100%);
+            background: linear-gradient(135deg, #4F46E5 0%, #10B981 100%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        .shadow-neon {
+            box-shadow: 0 0 5px rgba(79, 70, 229, 0.2), 0 0 20px rgba(79, 70, 229, 0.1);
         }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 min-h-screen font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300">
-    <div class="container mx-auto px-4 py-8 max-w-3xl">
-        <h1 class="text-4xl font-bold mb-8 text-center gradient-bg text-transparent bg-clip-text">Reverse Captcha Album Tracker</h1>
+<body class="bg-background dark:bg-background-dark min-h-screen font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl md:text-5xl font-bold mb-8 text-center gradient-bg text-transparent bg-clip-text animate-pulse-slow">Reverse Captcha Album Tracker</h1>
         
-        <div id="artistSearch" class="mb-8 max-w-md mx-auto">
-            <div class="flex relative">
-                <input type="text" id="artistInput" placeholder="Enter artist name (e.g., rick astley)" class="flex-grow p-3 border rounded-l-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
-                <button id="searchButton" class="bg-primary text-white p-3 rounded-r-lg hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+        <div id="artistSearch" class="mb-8 max-w-lg mx-auto">
+            <div class="flex relative shadow-lg rounded-full overflow-hidden bg-white dark:bg-gray-800 shadow-neon">
+                <input type="text" id="artistInput" placeholder="Enter artist name (e.g., Rick Astley)" class="flex-grow p-4 border-0 rounded-l-full shadow-sm focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:text-gray-100 text-base">
+                <button id="searchButton" class="bg-primary text-white p-4 rounded-r-full hover:bg-indigo-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
@@ -43,48 +73,55 @@
             </div>
         </div>
 
-        <div id="albumList" class="hidden mb-8 animate-fade-in max-w-md mx-auto">
-            <h2 class="text-2xl font-semibold mb-4 text-secondary dark:text-secondary flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div id="albumList" class="hidden mb-8 fade-in">
+            <h2 class="text-3xl font-semibold mb-6 text-secondary dark:text-secondary flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
                 </svg>
                 Albums
             </h2>
-            <ul id="albumItems" class="space-y-2"></ul>
+            <div id="albumItems" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
         </div>
 
         <div id="captchaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full shadow-xl">
-                <h3 class="text-xl font-semibold mb-4 text-primary dark:text-primary flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl max-w-md w-full shadow-2xl transform transition-all duration-300 scale-95 opacity-0">
+                <h3 class="text-2xl font-semibold mb-4 text-primary dark:text-primary flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                     Reverse Captcha
                 </h3>
-                <p id="captchaDescription" class="mb-4 dark:text-gray-300"></p>
-                <input type="file" id="imageInput" accept="image/*" class="mb-4 hidden">
-                <div id="dragDropArea" class="border-2 border-dashed border-gray-300 dark:border-gray-600 p-4 text-center mb-4 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300">
-                    <p class="dark:text-gray-300">Drag and drop an image here or click to select</p>
+                <p class="mb-3 dark:text-gray-300 text-base font-semibold">Upload an image that matches the following text description:</p>
+                <p id="captchaDescription" class="mb-4 dark:text-gray-300 text-base italic"></p>
+                <input type="file" id="imageInput" accept="image/*" class="mb-3 hidden">
+                <div id="dragDropArea" class="border-2 border-dashed border-gray-300 dark:border-gray-600 p-6 text-center mb-4 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300">
+                    <p class="dark:text-gray-300 text-base">Drag and drop an image here or click to select</p>
                 </div>
-                <div class="flex justify-end space-x-2">
-                    <button onclick="submitCaptcha()" class="bg-secondary text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary">Submit</button>
-                    <button onclick="closeCaptcha()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Close</button>
+                <div class="flex justify-end space-x-3">
+                    <button onclick="closeCaptcha()" class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 text-base">Close</button>
+                    <button onclick="submitCaptcha()" class="bg-secondary text-white px-4 py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary text-base">Submit</button>
                 </div>
             </div>
         </div>
 
-        <div id="trackList" class="hidden animate-fade-in max-w-md mx-auto">
-            <h2 class="text-2xl font-semibold mb-4 text-secondary dark:text-secondary flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div id="loadingMessage" class="hidden text-center py-4 text-lg font-semibold text-primary">
+            Processing your request... Please wait.
+        </div>
+
+        <div id="trackList" class="hidden fade-in">
+            <h2 class="text-3xl font-semibold mb-6 text-secondary dark:text-secondary flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                 </svg>
                 Track List
             </h2>
-            <ul id="trackItems" class="space-y-2"></ul>
+            <div class="max-h-96 overflow-y-auto custom-scrollbar pr-4">
+                <ul id="trackItems" class="space-y-3"></ul>
+            </div>
         </div>
     </div>
 
-    <button id="darkModeToggle" class="fixed bottom-4 right-4 bg-gray-200 dark:bg-gray-700 p-2 rounded-full shadow-lg">
+    <button id="darkModeToggle" class="fixed bottom-6 right-6 bg-gray-200 dark:bg-gray-700 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-800 dark:text-gray-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
         </svg>
@@ -136,19 +173,19 @@
             const albumList = document.getElementById('albumItems');
             albumList.innerHTML = '';
             data.albums.forEach(album => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                        <span class="text-sm font-medium">${album.title} <span class="text-gray-500 dark:text-gray-400">(${album.year})</span></span>
-                        <button class="text-primary hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 focus:outline-none">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
-                            </svg>
+                const div = document.createElement('div');
+                div.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition duration-300 overflow-hidden transform hover:scale-105';
+                div.innerHTML = `
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold mb-2">${album.title}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-3">Released: ${album.year}</p>
+                        <button class="w-full bg-primary text-white py-2 px-3 rounded-full hover:bg-indigo-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary text-sm">
+                            View Tracks
                         </button>
                     </div>
                 `;
-                li.querySelector('button').onclick = () => showCaptcha(album.title, data.description);
-                albumList.appendChild(li);
+                div.querySelector('button').onclick = () => showCaptcha(album.title, data.description);
+                albumList.appendChild(div);
             });
 
             document.getElementById('albumList').classList.remove('hidden');
@@ -157,11 +194,21 @@
         function showCaptcha(albumName, description) {
             currentAlbum = albumName;
             document.getElementById('captchaDescription').textContent = description;
-            document.getElementById('captchaModal').classList.remove('hidden');
+            const modal = document.getElementById('captchaModal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.querySelector('div').classList.remove('scale-95', 'opacity-0');
+                modal.querySelector('div').classList.add('scale-100', 'opacity-100');
+            }, 50);
         }
 
         function closeCaptcha() {
-            document.getElementById('captchaModal').classList.add('hidden');
+            const modal = document.getElementById('captchaModal');
+            modal.querySelector('div').classList.remove('scale-100', 'opacity-100');
+            modal.querySelector('div').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
         }
 
         async function submitCaptcha() {
@@ -179,9 +226,10 @@
                 imageBase64: imageBase64
             };
         
-            console.log('Submitting payload:', payload);
-        
             try {
+                closeCaptcha();
+                document.getElementById('loadingMessage').classList.remove('hidden');
+                
                 const response = await fetch('/album-songs-with-test', {
                     method: 'POST',
                     headers: {
@@ -196,13 +244,12 @@
                 }
         
                 const data = await response.json();
-                console.log('Response data:', data);
-        
                 displayTracks(data);
-                closeCaptcha();
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while submitting the captcha. Please try again.');
+            } finally {
+                document.getElementById('loadingMessage').classList.add('hidden');
             }
         }
 
@@ -211,10 +258,12 @@
             trackList.innerHTML = '';
             tracks.forEach((track, index) => {
                 const li = document.createElement('li');
+                li.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 flex items-center transform transition duration-300 hover:scale-105';
                 li.innerHTML = `
-                    <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-                        <span class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-3 text-sm font-bold">${index + 1}</span>
-                        <span class="text-sm font-medium">${track.title}</span>
+                    <span class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-4 text-sm font-bold">${index + 1}</span>
+                    <div>
+                        <h4 class="text-base font-semibold mb-1">${track.title}</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Duration: ${track.duration}</p>
                     </div>
                 `;
                 trackList.appendChild(li);
