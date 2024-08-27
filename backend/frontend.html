@@ -117,7 +117,7 @@
                 Track List
             </h2>
             <div class="max-h-96 overflow-y-auto custom-scrollbar pr-4">
-                <ul id="trackItems" class="space-y-3"></ul>
+                <ul id="trackItems" class="space-y-2"></ul>
             </div>
         </div>
     </div>
@@ -186,7 +186,7 @@
             albumList.innerHTML = '';
             data.albums.forEach(album => {
                 const div = document.createElement('div');
-                div.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition duration-300 overflow-hidden transform hover:scale-105';
+                div.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition duration-300 overflow-hidden';
                 div.innerHTML = `
                     <div class="p-4">
                         <h3 class="text-lg font-semibold mb-2">${album.title}</h3>
@@ -275,18 +275,12 @@
             trackList.innerHTML = '';
             tracks.forEach((track, index) => {
                 const li = document.createElement('li');
-                li.className = 'bg-white dark:bg-gray-800 rounded-xl shadow-md p-4 flex items-center transform transition duration-300 hover:scale-105';
+                li.className = 'bg-white dark:bg-gray-800 rounded-lg shadow p-3 flex items-center';
                 li.innerHTML = `
-                    <span class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-4 text-sm font-bold">${index + 1}</span>
+                    <span class="w-6 h-6 flex items-center justify-center bg-primary text-white rounded-full mr-3 text-xs font-bold">${index + 1}</span>
                     <div class="flex-grow">
-                        <h4 class="text-base font-semibold mb-1">${track.title}</h4>
+                        <h4 class="text-sm font-semibold">${track.title}</h4>
                     </div>
-                    <button class="text-primary dark:text-primary hover:text-purple-700 dark:hover:text-purple-400 transition duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </button>
                 `;
                 trackList.appendChild(li);
             });
