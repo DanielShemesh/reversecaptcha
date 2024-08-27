@@ -2,43 +2,40 @@
 
 ## Live Demo
 
-You can try the deployed version of Reverse Captcha [here](https://reversecaptcha.onrender.com/).
+Try the live version [here](https://reversecaptcha.onrender.com/).
 
 ## Overview
 
-Reverse Captcha is an innovative web application that adds a unique twist to the traditional CAPTCHA system. Instead of asking users to prove they're human, it challenges them to demonstrate their ability to understand and respond to text descriptions with matching images. This project consists of a Go backend API and a frontend UI built with HTML, Tailwind CSS, and JavaScript.
+Reverse Captcha is a web app that replaces traditional CAPTCHAs with a unique challenge: match a text description with an image. It features a Go backend and a frontend built with HTML, Tailwind CSS, and JavaScript.
 
-![Demo of Reverse Captcha](assets/demo.png)
+![Demo](assets/demo.png)
 
 ## Features
 
-- User-friendly interface for requesting album information
-- Artist search functionality
-- Album selection from search results
-- Reverse CAPTCHA challenge for accessing track lists
+- Search and view artist albums
+- Reverse CAPTCHA to access track lists
 
 ## How It Works
 
-1. Users enter an artist name to retrieve a list of albums.
-2. Upon selecting an album, users must complete a Reverse CAPTCHA challenge to access the track list.
-3. The challenge presents a text description, and users must upload an image that matches the description.
-4. If successful, the track list is displayed. If not, a new challenge is presented.
+1. Enter an artist name to get album lists.
+2. Select an album and complete a Reverse CAPTCHA to view the track list.
+3. Match the text description with an image to pass the CAPTCHA.
 
-## Technical Stack
+## Tech Stack
 
-- Backend: Go
-- Frontend: HTML, Tailwind CSS, JavaScript
+- **Backend:** Go
+- **Frontend:** HTML, Tailwind CSS, JavaScript
 
 ## Installation
 
 ### Prerequisites
 
 - Go
-- OpenAI API Key (for Reverse CAPTCHA functionality)
+- OpenAI API Key (for CAPTCHA)
 
-### Backend Setup
+### Setup
 
-1. Clone the repository:
+1. Clone the repo:
     ```bash
     git clone https://github.com/danielshemesh/reversecaptcha
     cd reversecaptcha
@@ -49,37 +46,34 @@ Reverse Captcha is an innovative web application that adds a unique twist to the
     cd backend
     ```
 
-3. Set the following environment variables in your terminal or system:
+3. Set environment variables:
 
-   - **Linux/MacOS:**
-     ```bash
-     export OPENAI_API_KEY=your_openai_api_key
-     export OPENAI_API_BASE_URL=https://api.openai.com/v1
-     ```
+   **Linux/MacOS:**
+    ```bash
+    export OPENAI_API_KEY=your_openai_api_key
+    export OPENAI_API_BASE_URL=https://api.openai.com/v1
+    ```
 
-   - **Windows (Command Prompt):**
-     ```cmd
-     set OPENAI_API_KEY=your_openai_api_key
-     set OPENAI_API_BASE_URL=https://api.openai.com/v1
-     ```
+   **Windows (Command Prompt):**
+    ```cmd
+    set OPENAI_API_KEY=your_openai_api_key
+    set OPENAI_API_BASE_URL=https://api.openai.com/v1
+    ```
 
-   - **Windows (PowerShell):**
-     ```powershell
-     $env:OPENAI_API_KEY="your_openai_api_key"
-     $env:OPENAI_API_BASE_URL="https://api.openai.com/v1"
-     ```
-
-   Replace `your_openai_api_key` with your actual OpenAI API key.
-   If you're using a custom OpenAI API endpoint, replace the `OPENAI_BASE_URL` with the appropriate URL.
+   **Windows (PowerShell):**
+    ```powershell
+    $env:OPENAI_API_KEY="your_openai_api_key"
+    $env:OPENAI_API_BASE_URL="https://api.openai.com/v1"
+    ```
 
 4. Install Go dependencies:
     ```bash
     go mod tidy
     ```
 
-5. Run the Go server:
+5. Run the server:
     ```bash
     go run backend.go
     ```
 
-   The web app will be available at `http://localhost:8080`.
+   Access the app at `http://localhost:8080`.
