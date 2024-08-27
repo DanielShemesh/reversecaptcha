@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reverse Captcha Album Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -14,19 +15,27 @@
                         primary: '#3B82F6',
                         secondary: '#10B981',
                     },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
                 },
             },
         }
     </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #3B82F6 0%, #10B981 100%);
+        }
+    </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 min-h-screen font-sans text-gray-900 dark:text-gray-100 transition-colors duration-300">
     <div class="container mx-auto px-4 py-8 max-w-3xl">
-        <h1 class="text-4xl font-bold mb-8 text-center text-primary dark:text-primary">Reverse Captcha Album Tracker</h1>
+        <h1 class="text-4xl font-bold mb-8 text-center gradient-bg text-transparent bg-clip-text">Reverse Captcha Album Tracker</h1>
         
         <div id="artistSearch" class="mb-8 max-w-md mx-auto">
-            <div class="flex">
-                <input type="text" id="artistInput" placeholder="Enter artist name (e.g., Rick Astley)" class="flex-grow p-3 border rounded-l-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
-                <button onclick="searchArtist()" class="bg-primary text-white p-3 rounded-r-lg hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+            <div class="flex relative">
+                <input type="text" id="artistInput" placeholder="Enter artist name (e.g., rick astley)" class="flex-grow p-3 border rounded-l-lg shadow-sm focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100">
+                <button id="searchButton" class="bg-primary text-white p-3 rounded-r-lg hover:bg-blue-600 transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
@@ -35,13 +44,23 @@
         </div>
 
         <div id="albumList" class="hidden mb-8 animate-fade-in max-w-md mx-auto">
-            <h2 class="text-2xl font-semibold mb-4 text-secondary dark:text-secondary">Albums</h2>
+            <h2 class="text-2xl font-semibold mb-4 text-secondary dark:text-secondary flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+                </svg>
+                Albums
+            </h2>
             <ul id="albumItems" class="space-y-2"></ul>
         </div>
 
         <div id="captchaModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-md w-full shadow-xl">
-                <h3 class="text-xl font-semibold mb-4 text-primary dark:text-primary">Reverse Captcha</h3>
+                <h3 class="text-xl font-semibold mb-4 text-primary dark:text-primary flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    Reverse Captcha
+                </h3>
                 <p id="captchaDescription" class="mb-4 dark:text-gray-300"></p>
                 <input type="file" id="imageInput" accept="image/*" class="mb-4 hidden">
                 <div id="dragDropArea" class="border-2 border-dashed border-gray-300 dark:border-gray-600 p-4 text-center mb-4 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-300">
@@ -55,7 +74,12 @@
         </div>
 
         <div id="trackList" class="hidden animate-fade-in max-w-md mx-auto">
-            <h2 class="text-2xl font-semibold mb-4 text-secondary dark:text-secondary">Track List</h2>
+            <h2 class="text-2xl font-semibold mb-4 text-secondary dark:text-secondary flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                </svg>
+                Track List
+            </h2>
             <ul id="trackItems" class="space-y-2"></ul>
         </div>
     </div>
@@ -76,8 +100,20 @@
             document.documentElement.classList.toggle('dark');
         });
 
+        // Search functionality
+        const searchButton = document.getElementById('searchButton');
+        const artistInput = document.getElementById('artistInput');
+
+        searchButton.addEventListener('click', searchArtist);
+        artistInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                searchArtist();
+            }
+        });
+
         async function searchArtist() {
-            const artistName = document.getElementById('artistInput').value;
+            const artistName = artistInput.value;
             if (!artistName) return;
         
             currentArtist = artistName;
@@ -103,7 +139,7 @@
                 const li = document.createElement('li');
                 li.innerHTML = `
                     <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition duration-300">
-                        <span class="text-sm">${album.title} (${album.year})</span>
+                        <span class="text-sm font-medium">${album.title} <span class="text-gray-500 dark:text-gray-400">(${album.year})</span></span>
                         <button class="text-primary hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-300 focus:outline-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
@@ -178,7 +214,7 @@
                 li.innerHTML = `
                     <div class="flex items-center p-3 bg-white dark:bg-gray-800 rounded-lg shadow-md">
                         <span class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-3 text-sm font-bold">${index + 1}</span>
-                        <span class="text-sm">${track.title}</span>
+                        <span class="text-sm font-medium">${track.title}</span>
                     </div>
                 `;
                 trackList.appendChild(li);
