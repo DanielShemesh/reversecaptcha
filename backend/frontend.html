@@ -48,7 +48,7 @@
             if (!artistName) return;
         
             currentArtist = artistName;
-            const response = await fetch(`http://localhost:8080/albums?artistName=${encodeURIComponent(artistName)}`, {
+            const response = await fetch(`/albums?artistName=${encodeURIComponent(artistName)}`, {
                 credentials: 'include'
             });
             const data = await response.json();
@@ -94,7 +94,7 @@
             console.log('Submitting payload:', payload);
         
             try {
-                const response = await fetch('http://localhost:8080/album-songs-with-test', {
+                const response = await fetch('/album-songs-with-test', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
