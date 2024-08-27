@@ -6,7 +6,7 @@ Try the live version [here](https://reversecaptcha.onrender.com/).
 
 ## Overview
 
-Reverse Captcha is a web app that replaces traditional CAPTCHAs with a unique challenge: match a text description with an image. It features a Go backend and a frontend built with HTML, Tailwind CSS, and JavaScript.
+Reverse Captcha is a web app that replaces traditional CAPTCHAs with a unique challenge: match a text description with an image. It features a Go backend and a frontend built with HTML, Tailwind CSS, and JavaScript. The app uses the MusicBrainz API to fetch music data.
 
 ![Demo](assets/demo.png)
 
@@ -25,6 +25,7 @@ Reverse Captcha is a web app that replaces traditional CAPTCHAs with a unique ch
 
 - **Backend:** Go
 - **Frontend:** HTML, Tailwind CSS, JavaScript
+- **Music Data:** MusicBrainz API
 
 ## Installation
 
